@@ -38,6 +38,7 @@ Route::middleware(['cors'])->group(function (){
     Route::apiResource('M1',M1Controller::class);
     Route::apiResource('M2',M2Controller::class);
     Route::get('liste/etudiants',[CandidatsController::class,'listeEtudiants']);
+    Route::get('liste/candidatures',[CandidatsController::class,'listeCandidatures']);
     Route::put('candidats/{id}/concours/present',[ConcoursController::class,'autorise']);
     Route::put('candidats/{id}/concours/abscent',[ConcoursController::class,'refused']);
     Route::put('candidats/{id}/decision/validate',[DecisionController::class,'autorise']);

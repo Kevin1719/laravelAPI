@@ -25,6 +25,11 @@ class CandidatsController extends Controller
         return Candidat::where('status', '<>', null)->get();
     }
 
+    public function listeCandidatures()
+    {
+        return Candidat::where('status',null)->where('entretien',null)->get();
+    }
+
     public function showAllCandidatAt($annee)
     {
         return Candidat::where('anneeCandidature',$annee)->get();

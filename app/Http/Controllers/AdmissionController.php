@@ -16,14 +16,14 @@ class AdmissionController extends Controller
     /**
      * @param Request $request
      * @param int $id
-     * 
+     *
      * @return [type]
      */
     public function admis(Request $request,int $id)
     {
         $groupe = $request->query('groupe');
         $candidat = Candidat::where('id',$id)->firstOrFail();
-        
+
         if($candidat->classe == 'L1') {
             $l1 = L1Model::where('candidat_id',$id)->orderByDesc('annee')->first();
             $candidat->update([
@@ -82,12 +82,12 @@ class AdmissionController extends Controller
 
     /**
      * @param int $id
-     * 
+     *
      * @return [type]
      */
     public function abandon(int $id)
     {
-        Candidat::findOrFail($id)->update(['abandon' => 1]);
+        Candidat::findOrFail($id)->update(['status' => 0, 'abandon' => 1,]);
         $classe = Candidat::findOrFail($id)->classe;
         $table =strtolower($classe).'_models';
         DB::table($table)->where('candidat_id',$id)->update(['status' => 0]);
@@ -97,7 +97,7 @@ class AdmissionController extends Controller
     /**
      * @param Request $request
      * @param int $id
-     * 
+     *
      * @return [type]
      */
     public function redouble(Request $request, int $id)
