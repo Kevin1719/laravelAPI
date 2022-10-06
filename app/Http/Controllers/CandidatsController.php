@@ -22,7 +22,9 @@ class CandidatsController extends Controller
 
     public function listeEtudiants()
     {
-        return Candidat::where('status', '<>', null)->get();
+        return Candidat::where('candidats.status', '<>', null)->join('nivs', 'nivs.candidat_id', '=', 'candidats.id')
+            ->select('candidats.*','nivs.annee', 'nivs.groupe', 'nivs.classe')
+            ->get();
     }
 
     public function listeCandidatures()
@@ -30,10 +32,10 @@ class CandidatsController extends Controller
         return Candidat::where('status',null)->where('entretien',null)->get();
     }
 
-    public function showAllCandidatAt($annee)
-    {
-        return Candidat::where('anneeCandidature',$annee)->get();
-    }
+    // public function showAllCandidatAt($annee)
+    // {
+    //     return Candidat::where('anneeCandidature',$annee)->get();
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -180,7 +182,7 @@ class CandidatsController extends Controller
             "genre" => $candidat->genre,
             "concours" => $candidat->concours,
             "entretien" => $candidat->entretien,
-            "classe" => $candidat->classe,
+            "classeEnCours" => $candidat->classeEnCours,
             "status" => $candidat->status,
             "anneeCandidature" => $candidat->anneeCandidature,
             "matricule" => $candidat->matricule,
@@ -196,11 +198,7 @@ class CandidatsController extends Controller
             "finish" => $candidat->finish,
             "abandon" => $candidat->abandon,
             "finishL3" => $candidat->finishL3,
-            "L1" => $candidat->l1,
-            "L2" => $candidat->l2,
-            "L3" => $candidat->l3,
-            "M1" => $candidat->m1,
-            "M2" => $candidat->m2,
+            "historique" => $candidat->niveaux
         ];
     }
 

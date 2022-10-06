@@ -14,7 +14,7 @@ class AddCandidatsFirstClasseColumn extends Migration
     public function up()
     {
         Schema::table('candidats', function (Blueprint $table){
-            $table->string('classe')->nullable();
+            $table->string('classeEnCours')->nullable();
         });
     }
 

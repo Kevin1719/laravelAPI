@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateL2ModelsTable extends Migration
+class CreateNiveauxTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateL2ModelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('l2_models', function (Blueprint $table) {
+        Schema::create('nivs', function (Blueprint $table) {
             $table->id();
             $table->integer('annee');
             $table->string('groupe');
+            $table->string('classe');
             $table->string('status')->default('En cours');
             $table->foreignId('candidat_id')->constrained()->onDelete('cascade');
             $table->timestamps();
@@ -30,6 +31,6 @@ class CreateL2ModelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('l2_models');
+        Schema::dropIfExists('niveaux');
     }
 }

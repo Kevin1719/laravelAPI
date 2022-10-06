@@ -20,7 +20,7 @@ class DecisionController extends Controller
         $classe = $request->query('classe');
         Candidat::findOrFail($id)->update([
             'entretien' => 1,
-            'classe' => $classe,
+            'classeEnCours' => $classe,
         ]);
         return response()->json([
             'success' => 1,

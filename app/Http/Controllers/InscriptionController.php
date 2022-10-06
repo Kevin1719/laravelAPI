@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Niv;
 use App\Models\Candidat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,15 @@ class InscriptionController extends Controller
         //uri = api/candidats/{}/inscription?groupe=..
         $groupe = $request->query('groupe');
         $candidat = Candidat::findOrFail($id);
+        // return [
+        //     'candidat' => $candidat
+        // ];
+        Niv::create([
+            'annee' => $candidat->anneeCandidature,
+            'classe' => $candidat->classeEnCours,
+            'candidat_id' => $candidat->id,
+            'groupe' => $groupe,
+        ]); 
         $prenom = [];
         $prenom[] = explode(" ",$candidat->prenom);
         // return [ 
@@ -48,16 +58,12 @@ class InscriptionController extends Controller
             }
         }
         $candidat->update([
-            'status' => 1,
+            'status' => 'En cours',
             'email' => strtolower($newEmail),
             'matricule' => MatriculeController::matricule($candidat),
         ]);
-        $table = strtolower($candidat->classe)."_models";
-        DB::table($table)->insert([
-            'annee' => $candidat->anneeCandidature,
-            'candidat_id' => $candidat->id,
-            'groupe' => $groupe,
-        ]); 
+       
+
         return response()->json([
             'success' => 1,
         ]);       

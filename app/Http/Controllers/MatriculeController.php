@@ -16,12 +16,12 @@ class MatriculeController extends Controller
         } elseif (strtolower($candidat->genre) == 'f'){
             $matricule = 'FIF';
         }
-        $mat = Matricule::where('annee',date('y'))->where('classe',$candidat->classe)->first();
+        $mat = Matricule::where('annee',date('y'))->first();
         if(is_null($mat)){
             $number = 1;
             Matricule::create([
                 'annee' => date('y'),
-                'classe' => $candidat->classe,
+                'classe' => $candidat->classeEnCours,
                 'number' => 2
             ]);
         } else {
