@@ -18,9 +18,40 @@ class InscriptionController extends Controller
     {
         //uri = api/candidats/{}/inscription?groupe=..
         $groupe = $request->query('groupe');
-
-        Candidat::findOrFail($id)->update(['status' => 1]);
         $candidat = Candidat::findOrFail($id);
+        $prenom = [];
+        $prenom[] = explode(" ",$candidat->prenom);
+        // return [ 
+        //     $candidat->penom,
+        //     $prenom
+        // ];
+        $candidats = Candidat::all();
+        $emails = [];
+        foreach($candidats as $can){
+            $emails[] = $can->email;
+        }
+        $nbr = count($prenom);
+        if($nbr == 0){
+            $tempEmail = $candidat->nom."@esti.mg";
+            if(in_array($tempEmail, $emails)){
+                $newEmail = $candidat->nom.".p".date('y')."@esti.mg";
+            } else {
+                $newEmail = $tempEmail;
+            }
+        } else {
+            $pren = $prenom[0][0];
+            $tempEmail = $pren.".".$candidat->nom."@esti.mg";
+            if(in_array($tempEmail,$emails)){
+                $newEmail = $pren."p".date('y').".".$candidat->nom."@esti.mg";
+            } else {
+                $newEmail = $tempEmail;
+            }
+        }
+        $candidat->update([
+            'status' => 1,
+            'email' => strtolower($newEmail),
+            'matricule' => MatriculeController::matricule($candidat),
+        ]);
         $table = strtolower($candidat->classe)."_models";
         DB::table($table)->insert([
             'annee' => $candidat->anneeCandidature,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Candidat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class CandidatsController extends Controller
@@ -16,7 +17,12 @@ class CandidatsController extends Controller
      */
     public function index()
     {
-        return Candidat::orderby('id')->get();
+        return Candidat::all();
+    }
+
+    public function showAllCandidatAt($annee)
+    {
+        return Candidat::where('anneeCandidature',$annee)->get();
     }
 
     /**
@@ -29,6 +35,7 @@ class CandidatsController extends Controller
     {
         $vs = Validator::make($request->all(),[
             'nom' => ['required'],
+            'email' => ['unique:candidats'],
             'dateDeNaissance' => ['required'],
             'lieuDeNaissance' => ['required'],
             'nationalite' => ['required'],
@@ -38,13 +45,22 @@ class CandidatsController extends Controller
             'serie' => ['required'],
             'postule' => ['required'],
             'genre' => ['required'],
-            'email'=>['unique:candidats','required'],
          ]);
         if($vs->fails()){
             return response()->json([
                 'validate_err' => $vs->messages(),
             ]);
         } else {
+            $diplome = null;
+            $rlvBacc = null;
+            $rlvSeconde = null;
+            $rlvPremiere = null;
+            $rlvTerminale = null;
+            $certificatDeResidence = null;
+            $selectedPhoto = null;
+            $selectedCINorCIS = null;
+            $cv = null;
+            $bordereauEsti = null;
 
             if($request->hasFile('selectedDiplome')){
                 $path = 'public/dossier/Diplome/'.$request->nom;
@@ -110,7 +126,7 @@ class CandidatsController extends Controller
 
             $candidat->update([
                 'anneeCandidature' => date('Y') + 1,
-                /*'selectedDiplome'=> $diplome,
+                'selectedDiplome'=> $diplome,
                 'selectedReleveDeNoteBacc'=> $rlvBacc,
                 'selectedReleveDeNoteSeconde'=> $rlvSeconde,
                 'selectedReleveDeNotePremiere'=> $rlvPremiere,
@@ -119,7 +135,7 @@ class CandidatsController extends Controller
                 'selectedPhoto'=> $selectedPhoto,
                 'selectedCINorCIS'=> $selectedCINorCIS,
                 'cv'=> $cv,
-                'bordereauEsti'=> $bordereauEsti,*/
+                'bordereauEsti'=> $bordereauEsti,
             ]);
             return response()->json(['success' => 1],200);
         }
@@ -134,10 +150,12 @@ class CandidatsController extends Controller
      */
     public function show(Candidat $candidat)
     {
+
         return [
             "id" => $candidat->id,
             'nom' => $candidat->nom,
             "prenom" => $candidat->prenom,
+            "photo" => '../assets/Api/public'.Storage::url($candidat->photo),
             "age" => $candidat->age,
             "serie" => $candidat->serie,
             "nationalite" => $candidat->nationalite,
@@ -145,9 +163,6 @@ class CandidatsController extends Controller
             "contact" => $candidat->contact,
             "nombreEnfant" => $candidat->nombreEnfant,
             "adresse" => $candidat->adresse,
-            "tel1" => $candidat->tel1,
-            "tel2" => $candidat->tel2,
-            "tel3" => $candidat->tel3,
             "email" => $candidat->email,
             "dateDeNaissance" => $candidat->dateDeNaissance,
             "lieuDeNaissance" => $candidat->lieuDeNaissance,

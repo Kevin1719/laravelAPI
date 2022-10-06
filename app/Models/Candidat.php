@@ -40,9 +40,9 @@ class Candidat extends Model
 
     public function getanneeUniversitaireAttribute()
     {
-        $annee = $this->anneeCandidature - 1;
+        $annee = $this->anneeCandidature + 1;
 
-        return $annee.'-'.$this->anneeCandidature;
+        return $this->anneeCandidature.'-'.$annee;
     }
     public function getageAttribute()
     {

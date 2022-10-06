@@ -15,9 +15,14 @@ class PreparatoireFactory extends Factory
     {
         return [
             'nom' => $this->faker->lastname(),
-            'mois' => $this->faker->randomElement([9,11]),
             'prenom' => $this->faker->firstname(),
+            'email' => $this->faker->unique()->safeEmail(),
             'contact' => $this->faker->e164PhoneNumber(),
+            'serie' => $this->faker->randomElement(['c','a','d']),
+            'niveau' => $this ->faker->randomElement(['L1','L2','L3','M1','M2']),
+            'adresse' => $this ->faker -> state(),
+            'genre' => $this -> faker -> randomElement(['G','F']),
+            'bordereauDeDonnee' => 'none',
         ];
     }
 }

@@ -14,10 +14,10 @@ class L1Model extends Model
     {
         return $this->belongsTo(Candidat::class);
     }
-    public function getanneeuniversitaireAttribute()
+    public function getanneeUniversitaireAttribute()
     {
-        $annee = $this->annee + 1;
+        $annee = $this->candidat->anneeCandidature + 1;
 
-        return $this->annee.'-'.$annee;
+        return $this->candidat->anneeCandidature.'-'.$annee;
     }
 }

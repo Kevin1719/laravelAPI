@@ -14,4 +14,10 @@ class M2Model extends Model
     {
         return $this->belongsTo(Candidat::class);
     }
+    public function getanneeUniversitaireAttribute()
+    {
+        $annee = $this->candidat->anneeCandidature + 1;
+
+        return $this->candidat->anneeCandidature.'-'.$annee;
+    }
 }

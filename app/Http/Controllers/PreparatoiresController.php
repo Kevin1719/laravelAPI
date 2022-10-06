@@ -44,7 +44,7 @@ class PreparatoiresController extends Controller
             ]);
         } else {
             if($request->hasFile('bordereauDeDonnee')){
-                $path = 'public/dossier';
+                $path = 'public/dossier/'.$request->nom;
                 $image_name = $request->file('bordereauDeDonnee')->getClientOriginalName();
                 $chemin = $request->file('bordereauDeDonnee')->storeAs($path,$image_name);
             }
