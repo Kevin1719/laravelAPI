@@ -15,9 +15,25 @@ class PreparatoiresController extends Controller
      */
     public function index()
     {
-        return Preparatoire::orderBy('nom')->get();
+        return Preparatoire::where('validation', 1)->get();
     }
 
+    public function listePrepaInscriOnligne()
+    {
+        return Preparatoire::where('validation', null)->get();
+    }
+
+    public function validation($id)
+    {
+        $prep = Preparatoire::findOrFail($id);
+        $prep->update(['validation' => 1]);
+    }
+
+    public function refus($id)
+    {
+        $prep = Preparatoire::findOrFail($id);
+        $prep->update(['validation' => 0]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -57,6 +73,36 @@ class PreparatoiresController extends Controller
         }
     }
 
+    public function storeAdmin(Request $request)
+    {
+        $vs = Validator::make($request->all(),[
+            'nom' => ['required'],
+            'email' => ['required', 'email'],
+            'serie' => ['required'],
+            'niveau' => ['required'],
+            'adresse' => ['required'],
+            'contact' => ['required','numeric'],
+            'genre' => ['required'],
+            'bordereauDeDonnee' => ['file']
+        ]);
+        if($vs->fails()){
+            return response()->json([
+                'validate_err' => $vs->messages(),
+            ]);
+        } else {
+            if($request->hasFile('bordereauDeDonnee')){
+                $path = 'public/dossier/'.$request->nom;
+                $image_name = $request->file('bordereauDeDonnee')->getClientOriginalName();
+                $chemin = $request->file('bordereauDeDonnee')->storeAs($path,$image_name);
+            }
+
+            $prep = Preparatoire::create($request->all());
+            $prep->update(['bordereauDeDonnee' => $chemin, 'validation' => 1]);
+            return response()->json([
+                'success' => 'Inscription reussie',
+            ], 200);
+        }
+    }
     /**
      * Display the specified resource.
      *

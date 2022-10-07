@@ -60,7 +60,7 @@ class CandidatsController extends Controller
          ]);
         if($vs->fails()){
             return response()->json([
-                'validate_err' => $vs->messages(),
+                'validate_err' => $vs->messages(),//aza rarahina fa mandeh hiany io
             ]);
         } else {
             $diplome = null;
@@ -182,7 +182,7 @@ class CandidatsController extends Controller
             "genre" => $candidat->genre,
             "concours" => $candidat->concours,
             "entretien" => $candidat->entretien,
-            "classeEnCours" => $candidat->classeEnCours,
+            "classe" => $candidat->classe,
             "status" => $candidat->status,
             "anneeCandidature" => $candidat->anneeCandidature,
             "matricule" => $candidat->matricule,
@@ -242,6 +242,52 @@ class CandidatsController extends Controller
             return response()->json([
                 "success" => "1"
             ], 200);
+        }
+    }
+    public function maj(Request $request, $id)
+    {
+        $vs = Validator::make($request->all(),[
+            'adresse' => ['required'],
+            'contact' => ['required'],
+            'dateDeNaissance' => ['required'],
+            'email' => ['required'],
+            'lieuDeNaissance' => ['required'],
+            'nationalite' => ['required'],
+            'nom' => ['required'],
+            'prenom' => ['required'],
+            'nomPere' => ['required'],
+            'nomMere' => ['required'],
+            'nomTuteur' => ['required'],
+            'serie' => ['required'],
+            'telPere'=>['required'],
+            'telMere'=>['required'],
+            'telTuteur'=>['required'],
+         ]);
+        if($vs->fails()){
+            return response()->json([
+                'validate_err' => $vs->messages(),//aza rarahina fa mandeh hiany io
+            ]);
+        } else {
+            Candidat::findOrFail($id)->update([
+                'adresse' => $request->adresse,
+                'contact' => $request->contact,
+                'dateDeNaissance' => $request->dateDeNaissance,
+                'email' => $request->email,
+                'lieuDeNaissance' => $request->lieuDeNaissance,
+                'nationalite' => $request->nationalite,
+                'nom' => $request->nom,
+                'prenom' => $request->prenom,
+                'nomPere' => $request->nomPere,
+                'nomMere' => $request->nomMere,
+                'nomTuteur' => $request->nomTuteur,
+                'serie' => 'D',
+                'telPere'=>$request->telPere,
+                'telMere'=>$request->telMere,
+                'telTuteur'=>$request->telTuteur,
+            ]);
+            return response()->json([
+                'success' => 1,
+            ],200);
         }
     }
 }
