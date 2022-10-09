@@ -14,10 +14,8 @@ class DashboardController extends Controller
     public function index()
     {
         $data = [];
-        // $nombreGarconTotate = Candidat::where('genre','G')->count();
-        // $nombreFemmeTotate = Candidat::where('genre','F')->count();
-        // $annee = date('Y');
         $anneeExist = [];
+        $count = 0;
         $candidats = Candidat::all();
         $preparatoires = Preparatoire::all();
         foreach($candidats as $candidat){
@@ -32,11 +30,23 @@ class DashboardController extends Controller
         }
         foreach($anneeExist as $year){
             $this->year = $year;
+            $count = 0;
+            foreach($preparatoires as $prepa){
+                if($prepa->annee == $year){
+                    foreach($candidats as $cand){
+                        if(strtolower($cand->nom) == strtolower($prepa->nom) && strtolower($cand->prenom) == strtolower($prepa->prenom) && $prepa->annee == $cand->anneeCandidature){
+                            $count++;
+                        }
+                    }
+                }
+            }
             $data [] = [
-                'annee' => [
+
                     'year' => $year,
                     'nombreCourPrepT' => Preparatoire::where('annee',$year)->count(),
-                    // 'nombreCourPrepF' => Pre
+                    'nombreCourPrepF' => Preparatoire::where('annee', $year)->where('genre', 'F')->count(),
+                    'nombreCourPrepG' => Preparatoire::where('annee', $year)->where('genre', 'G')->count(),
+                    'PrepaEtCandidat' => $count,
                     'nombreInscritT' => Candidat::where('entretien',1)->where('status', '<>', null)->where('anneeCandidature', $year)->count(),
                     'nombreInscritL1' => Candidat::where('entretien',1)
                                                     ->where('status', '<>', null)
@@ -366,7 +376,6 @@ class DashboardController extends Controller
                                                     ->whereColumn('candidats.id','nivs.candidat_id');
                                                 },'M2')
                                             ->count(),
-                ],
             ];
         }
 
