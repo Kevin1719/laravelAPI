@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Candidat;
 use App\Models\Niv;
+use App\Models\Preparatoire;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -18,17 +19,24 @@ class DashboardController extends Controller
         // $annee = date('Y');
         $anneeExist = [];
         $candidats = Candidat::all();
+        $preparatoires = Preparatoire::all();
         foreach($candidats as $candidat){
             if(!in_array($candidat->anneeCandidature,$anneeExist)){
                 $anneeExist[] = $candidat->anneeCandidature;
             }
-        }     
+        }
+        foreach($preparatoires as $preparatoire){
+            if(!in_array($preparatoire->annee, $anneeExist)){
+                $anneeExist[] = $preparatoire->annee;
+            }
+        }
         foreach($anneeExist as $year){
             $this->year = $year;
             $data [] = [
-                $year => [
-                    // 'nombreFemme' => Candidat::where('genre', 'F')->where('anneeCandidature', $year)->count(),
-                    // 'nombreHomme' => Candidat::where('genre', 'G')->where('anneeCandidature', $year)->count(),
+                'annee' => [
+                    'year' => $year,
+                    'nombreCourPrepT' => Preparatoire::where('annee',$year)->count(),
+                    // 'nombreCourPrepF' => Pre
                     'nombreInscritT' => Candidat::where('entretien',1)->where('status', '<>', null)->where('anneeCandidature', $year)->count(),
                     'nombreInscritL1' => Candidat::where('entretien',1)
                                                     ->where('status', '<>', null)
@@ -360,7 +368,7 @@ class DashboardController extends Controller
                                             ->count(),
                 ],
             ];
-        } 
+        }
 
         return $data;
     }

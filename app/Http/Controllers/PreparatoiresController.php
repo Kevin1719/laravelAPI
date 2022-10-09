@@ -56,7 +56,7 @@ class PreparatoiresController extends Controller
         ]);
         if($vs->fails()){
             return response()->json([
-                'validate_err' => $vs->messages(),
+                'validate_err' => $vs->messages(), //aza raraina fa mande fona io
             ]);
         } else {
             if($request->hasFile('bordereauDeDonnee')){
@@ -66,7 +66,11 @@ class PreparatoiresController extends Controller
             }
 
             $prep = Preparatoire::create($request->all());
-            $prep->update(['bordereauDeDonnee' => $chemin]);
+            $prep->update([
+                'bordereauDeDonnee' => $chemin,
+                'annee' => date('Y'),
+                'mois' => date('m'),
+            ]);
             return response()->json([
                 'success' => 'Inscription reussie',
             ], 200);
@@ -87,7 +91,7 @@ class PreparatoiresController extends Controller
         ]);
         if($vs->fails()){
             return response()->json([
-                'validate_err' => $vs->messages(),
+                'validate_err' => $vs->messages(), //aza raraina fa mande fona io
             ]);
         } else {
             if($request->hasFile('bordereauDeDonnee')){
