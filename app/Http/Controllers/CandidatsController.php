@@ -213,14 +213,9 @@ class CandidatsController extends Controller
     {
         $request->validate([
             'nom' => ['required'],
-            'serie' => ['required'],
-            'situationFamiliale' => ['required'],
-            'nationalite' => ['required'],
+            'contact' => ['required'],
+            'email' => ['required'],
             'adresse' => ['required'],
-            'dateDeNaissance' => ['required'],
-            'lieuDeNaissance' => ['required'],
-            'postule' => ['required'],
-            'genre' => ['required'],
         ]);
 
         if($candidat->update($request->all())){
@@ -247,44 +242,17 @@ class CandidatsController extends Controller
     public function maj(Request $request, $id)
     {
         $vs = Validator::make($request->all(),[
-            'adresse' => ['required'],
-            'contact' => ['required'],
-            'dateDeNaissance' => ['required'],
-            'email' => ['required'],
-            'lieuDeNaissance' => ['required'],
-            'nationalite' => ['required'],
             'nom' => ['required'],
-            'prenom' => ['required'],
-            'nomPere' => ['required'],
-            'nomMere' => ['required'],
-            'nomTuteur' => ['required'],
-            'serie' => ['required'],
-            'telPere'=>['required'],
-            'telMere'=>['required'],
-            'telTuteur'=>['required'],
+            'contact' => ['required'],
+            'email' => ['required'],
+            'adresse' => ['required'],
          ]);
         if($vs->fails()){
             return response()->json([
-                'validate_err' => $vs->messages(),//aza rarahina fa mandeh hiany io
+                'success' => $vs->messages(),//aza rarahina fa mandeh hiany io
             ]);
         } else {
-            Candidat::findOrFail($id)->update([
-                'adresse' => $request->adresse,
-                'contact' => $request->contact,
-                'dateDeNaissance' => $request->dateDeNaissance,
-                'email' => $request->email,
-                'lieuDeNaissance' => $request->lieuDeNaissance,
-                'nationalite' => $request->nationalite,
-                'nom' => $request->nom,
-                'prenom' => $request->prenom,
-                'nomPere' => $request->nomPere,
-                'nomMere' => $request->nomMere,
-                'nomTuteur' => $request->nomTuteur,
-                'serie' => 'D',
-                'telPere'=>$request->telPere,
-                'telMere'=>$request->telMere,
-                'telTuteur'=>$request->telTuteur,
-            ]);
+            Candidat::findOrFail($id)->update($request->all());
             return response()->json([
                 'success' => 1,
             ],200);
